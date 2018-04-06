@@ -2,7 +2,6 @@ module Main exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Attributes.Aria exposing (..)
 import Html.Events exposing (..)
 
 
@@ -12,23 +11,23 @@ main =
 
 type Model
     = Loading
-    | Ok (List String)
+    | Ok (List { imgUrl : String, name : String, nonchalance : Int, aggression : Int, glamour : Int, speed : Int })
     | Error String
 
 
-gifUrls =
-    [ "https://media.giphy.com/media/qoxM1gi6i0V9e/giphy.gif"
-    , "https://media.giphy.com/media/CEdVDTtkvSelO/giphy.gif"
-    , "https://media.giphy.com/media/TKfywHrPHpJiE/giphy.gif"
-    , "https://media.giphy.com/media/cqG5aFdTkk5ig/giphy.gif"
-    , "https://media.giphy.com/media/QsTKxTfou4SSk/giphy.gif"
-    , "https://media.giphy.com/media/BkhOTDvASCfwk/giphy.gif"
-    , "https://media.giphy.com/media/mjvwvf7Udt8rK/giphy.gif"
-    , "https://media.giphy.com/media/1UnVU7zrZr3cQ/giphy.gif"
-    , "https://media.giphy.com/media/I04JymgGbnlgk/giphy.gif"
-    , "https://media.giphy.com/media/VM1JL42ALn0UU/giphy.gif"
-    , "https://media.giphy.com/media/RlBtYmW0BGUHS/giphy.gif"
-    , "https://media.giphy.com/media/bMnnmNo087fgs/giphy.gif"
+cards =
+    [ { imgUrl = "https://media.giphy.com/media/qoxM1gi6i0V9e/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/CEdVDTtkvSelO/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/TKfywHrPHpJiE/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/cqG5aFdTkk5ig/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/QsTKxTfou4SSk/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/BkhOTDvASCfwk/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/mjvwvf7Udt8rK/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/1UnVU7zrZr3cQ/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/I04JymgGbnlgk/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/VM1JL42ALn0UU/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/RlBtYmW0BGUHS/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    , { imgUrl = "https://media.giphy.com/media/bMnnmNo087fgs/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
     ]
 
 
@@ -44,7 +43,7 @@ update msg model =
             Loading
 
         TestSuccess ->
-            Ok gifUrls
+            Ok cards
 
         TestError msg ->
             Error msg
@@ -56,31 +55,26 @@ update msg model =
 --main = view Loading
 
 
-renderCat url =
+renderStat label value =
+    tr []
+        [ td [] [ text label ]
+        , th [ class "text-right" ] [ text (toString value) ]
+        ]
+
+
+renderCat card =
     div [ class "col-sm-6" ]
         [ div [ class "card my-2" ]
             [ div [ class "card-header" ]
-                [ text "Brian" ]
+                [ text card.name ]
             , div [ class "my-0 font-weight-normal" ]
-                [ img [ class "img-fluid", src url ] [] 
+                [ img [ class "img-fluid", src card.imgUrl ] []
                 , table [ class "table mb-0" ]
-                     [ tr []
-                          [ th [] [ text "Nonchalance" ]
-                          , td [ class "text-right" ] [ text "7" ]
-                          ]
-                     , tr []
-                          [ th [] [ text "Aggression" ]
-                          , td [ class "text-right" ] [ text "7" ]
-                          ]                     
-                     , tr []
-                          [ th [] [ text "Glamour" ]
-                          , td [ class "text-right" ] [ text "7" ]
-                          ]                     
-                     , tr []
-                          [ th [] [ text "Speed" ]
-                          , td [ class "text-right" ] [ text "7" ]
-                          ]                     
-                     ]
+                    [ renderStat "Nonchalance" card.nonchalance
+                    , renderStat "Aggression" card.aggression
+                    , renderStat "Glamour" card.glamour
+                    , renderStat "Speed" card.speed
+                    ]
                 ]
             ]
         ]
@@ -88,7 +82,7 @@ renderCat url =
 
 view model =
     div [ class "container" ]
-        [ div [ class "btn-group", role "group", ariaLabel "Test transitions" ]
+        [ div [ class "btn-group" ]
             [ button [ class "btn btn-secondary", onClick TestLoading ] [ text "Loading" ]
             , button [ class "btn btn-secondary", onClick TestSuccess ] [ text "Success" ]
             , button [ class "btn btn-secondary", onClick (TestError "My error message") ] [ text "Error" ]
