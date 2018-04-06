@@ -51,10 +51,37 @@ update msg model =
 
 
 
+--main = view (Ok gifUrls)
+--main = view (Error "Could not load images")
+--main = view Loading
+
+
 renderCat url =
-    div [ class "cat" ]
-        [ a []
-            [ img [ src url ] []
+    div [ class "col-sm-6" ]
+        [ div [ class "card my-2" ]
+            [ div [ class "card-header" ]
+                [ text "Brian" ]
+            , div [ class "my-0 font-weight-normal" ]
+                [ img [ class "img-fluid", src url ] [] 
+                , table [ class "table mb-0" ]
+                     [ tr []
+                          [ th [] [ text "Nonchalance" ]
+                          , td [ class "text-right" ] [ text "7" ]
+                          ]
+                     , tr []
+                          [ th [] [ text "Aggression" ]
+                          , td [ class "text-right" ] [ text "7" ]
+                          ]                     
+                     , tr []
+                          [ th [] [ text "Glamour" ]
+                          , td [ class "text-right" ] [ text "7" ]
+                          ]                     
+                     , tr []
+                          [ th [] [ text "Speed" ]
+                          , td [ class "text-right" ] [ text "7" ]
+                          ]                     
+                     ]
+                ]
             ]
         ]
 
@@ -74,7 +101,7 @@ view model =
                     ]
 
             Ok images ->
-                div []
+                div [ class "row" ]
                     (List.map renderCat images)
 
             Error msg ->
