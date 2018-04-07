@@ -12,7 +12,7 @@ main =
     Html.program { init = init, update = update, view = view, subscriptions = always Sub.none }
 
 init =
-  (Loading, Http.send Loaded (Http.get "http://localhost:3000/" decodeResponse))
+  (Loading, Http.send Loaded (Http.get "https://l9axnk5c93.execute-api.us-east-1.amazonaws.com/dev" decodeResponse))
 
 
 decodeResponse =
