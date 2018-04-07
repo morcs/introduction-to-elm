@@ -33,15 +33,17 @@ type Msg
 
 
 update msg model =
-    case msg of
+    case (model, msg) of
 
 
-        Select card ->
-            (model, Cmd.none)
-        Loaded (Result.Ok cards) ->
+        (Ok cards _, Select card) ->
+            (Ok cards (Just card), Cmd.none)
+        (_, Loaded (Result.Ok cards)) ->
             (Ok cards Nothing, Cmd.none)
-        Loaded (Result.Err err) ->
+        (_, Loaded (Result.Err err)) ->
             (Error (toString err), Cmd.none)
+        _ ->
+            (model, Cmd.none)
 
 
 
