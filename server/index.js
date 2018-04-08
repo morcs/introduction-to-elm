@@ -36,12 +36,23 @@ exports.handler = (event, context, callback) => {
     const shuffled = shuffle(repository);
     const result = shuffled.slice(0, 6);
 
-    const response = {
-        "statusCode": 200,
-        headers: {
-            "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
-          },        
-        "body": JSON.stringify(result)
-    };
+    const shouldReturnError = Math.random() < 0.1;
+
+    const headers = {
+        "Access-Control-Allow-Origin" : "*" // Required for CORS support to work
+    }; 
+
+    const response = 
+        shouldReturnError 
+          ? { "statusCode": 500
+            , "headers": headers
+            , "body": "This test service returns an error 10% of the time to allow testing of the error page, reload to try again!"
+            }
+          : { "statusCode": 200
+            , "headers": headers
+            , "body": JSON.stringify(result)
+            };
+          ;
+
     callback(null, response);
 };
