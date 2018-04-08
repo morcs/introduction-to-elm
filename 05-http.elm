@@ -12,22 +12,26 @@ main =
     Html.program { init = init, update = update, view = view, subscriptions = always Sub.none }
 
 
-init =
-    ( Loading, Http.send Loaded (Http.get "https://l9axnk5c93.execute-api.us-east-1.amazonaws.com/dev" decodeResponse) )
 
-
-decodeResponse =
-    Json.Decode.list decodeCard
-
-
-type alias Card =
-    { imgUrl : String, name : String, nonchalance : Int, aggression : Int, glamour : Int, speed : Int }
+-- MODEL
 
 
 type Model
     = Loading
     | CardList (List Card) (Maybe Card)
     | Error String
+
+
+type alias Card =
+    { imgUrl : String, name : String, nonchalance : Int, aggression : Int, glamour : Int, speed : Int }
+
+
+init =
+    ( Loading, sendApiRequest )
+
+
+
+-- UPDATE
 
 
 type Msg
@@ -57,42 +61,8 @@ update msg model =
                     ( Error "Unknown error", Cmd.none )
 
 
-renderStat label value =
-    tr []
-        [ td [] [ text label ]
-        , th [ class "text-right" ] [ text (toString value) ]
-        ]
 
-
-renderCard card =
-    div [ class "col-sm-6" ]
-        [ div [ class "card my-2 clickable", onClick (Select card) ]
-            [ div [ class "card-header" ]
-                [ text card.name ]
-            , div [ class "my-0 font-weight-normal" ]
-                [ img [ class "img-fluid", src card.imgUrl ] []
-                , table [ class "table mb-0" ]
-                    [ renderStat "Nonchalance" card.nonchalance
-                    , renderStat "Aggression" card.aggression
-                    , renderStat "Glamour" card.glamour
-                    , renderStat "Speed" card.speed
-                    ]
-                ]
-            ]
-        ]
-
-
-renderTopBar selected =
-    case selected of
-        Nothing ->
-            div [ class "fixed-top bg-success text-white p-3" ]
-                [ text "Please select a card" ]
-
-        Just card ->
-            div [ class "fixed-top bg-primary text-white p-3" ]
-                [ text "Selected: "
-                , strong [] [ text card.name ]
-                ]
+-- VIEW
 
 
 view model =
@@ -114,6 +84,57 @@ view model =
         Error msg ->
             div [ class "alert alert-danger" ]
                 [ text ("Error: " ++ msg) ]
+
+
+renderTopBar selected =
+    case selected of
+        Nothing ->
+            div [ class "fixed-top bg-success text-white p-3" ]
+                [ text "Please select a card" ]
+
+        Just card ->
+            div [ class "fixed-top bg-primary text-white p-3" ]
+                [ text "Selected: "
+                , strong [] [ text card.name ]
+                ]
+
+
+renderCard card =
+    div [ class "col-sm-6" ]
+        [ div [ class "card my-2 clickable", onClick (Select card) ]
+            [ div [ class "card-header" ]
+                [ text card.name ]
+            , div [ class "my-0 font-weight-normal" ]
+                [ img [ class "img-fluid", src card.imgUrl ] []
+                , table [ class "table mb-0" ]
+                    [ renderStat "Nonchalance" card.nonchalance
+                    , renderStat "Aggression" card.aggression
+                    , renderStat "Glamour" card.glamour
+                    , renderStat "Speed" card.speed
+                    ]
+                ]
+            ]
+        ]
+
+
+renderStat label value =
+    tr []
+        [ td [] [ text label ]
+        , th [ class "text-right" ] [ text (toString value) ]
+        ]
+
+
+
+-- HTTP
+
+
+sendApiRequest =
+    Http.get "https://l9axnk5c93.execute-api.us-east-1.amazonaws.com/dev" decodeResponse
+        |> Http.send Loaded
+
+
+decodeResponse =
+    Json.Decode.list decodeCard
 
 
 decodeCard : Json.Decode.Decoder Card
