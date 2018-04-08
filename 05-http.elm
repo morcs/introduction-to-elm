@@ -26,7 +26,7 @@ type alias Card =
 
 type Model
     = Loading
-    | Ok (List Card) (Maybe Card)
+    | CardList (List Card) (Maybe Card)
     | Error String
 
 
@@ -39,14 +39,14 @@ update msg model =
     case msg of
         Select card ->
             case model of
-                Ok cards _ ->
-                    ( Ok cards (Just card), Cmd.none )
+                CardList cards _ ->
+                    ( CardList cards (Just card), Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
 
         Loaded (Result.Ok cards) ->
-            ( Ok cards Nothing, Cmd.none )
+            ( CardList cards Nothing, Cmd.none )
 
         Loaded (Result.Err err) ->
             case err of
@@ -65,16 +65,18 @@ renderStat label value =
 
 
 renderCard card =
-    div [ class "card my-2", onClick (Select card) ]
-        [ div [ class "card-header" ]
-            [ text card.name ]
-        , div [ class "my-0 font-weight-normal" ]
-            [ img [ class "img-fluid", src card.imgUrl ] []
-            , table [ class "table mb-0" ]
-                [ renderStat "Nonchalance" card.nonchalance
-                , renderStat "Aggression" card.aggression
-                , renderStat "Glamour" card.glamour
-                , renderStat "Speed" card.speed
+    div [ class "col-sm-6" ]
+        [ div [ class "card my-2 clickable", onClick (Select card) ]
+            [ div [ class "card-header" ]
+                [ text card.name ]
+            , div [ class "my-0 font-weight-normal" ]
+                [ img [ class "img-fluid", src card.imgUrl ] []
+                , table [ class "table mb-0" ]
+                    [ renderStat "Nonchalance" card.nonchalance
+                    , renderStat "Aggression" card.aggression
+                    , renderStat "Glamour" card.glamour
+                    , renderStat "Speed" card.speed
+                    ]
                 ]
             ]
         ]
@@ -85,6 +87,7 @@ renderTopBar selected =
         Nothing ->
             div [ class "fixed-top bg-success text-white p-3" ]
                 [ text "Please select a card" ]
+
         Just card ->
             div [ class "fixed-top bg-primary text-white p-3" ]
                 [ text "Selected: "
@@ -98,17 +101,15 @@ view model =
             div [ class "alert alert-success" ]
                 [ text "Loading..." ]
 
-        Ok cards selected ->
-          div []
-           [
-            renderTopBar selected
-           ,main_ [ attribute "role" "main", class "container my-5 py-2" ]
-                  [ 
-                   div
-                     [ class "row" ]
-                     (List.map (\c -> div [ class "col-sm-6 clickable" ] [ renderCard c ]) cards)
-                  ]
-           ]
+        CardList cards selected ->
+            div []
+                [ renderTopBar selected
+                , main_ [ attribute "role" "main", class "container my-5 py-2" ]
+                    [ div
+                        [ class "row" ]
+                        (List.map renderCard cards)
+                    ]
+                ]
 
         Error msg ->
             div [ class "alert alert-danger" ]
