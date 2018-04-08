@@ -1,0 +1,20 @@
+# serverless.yml
+
+service: introduction-to-elm-server
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: us-east-1
+
+functions:
+  app:
+    handler: index.handler
+    events:
+      - http: 
+          path: /
+          method: GET
+          cors:
+            origin: '*'
+            maxAge: 86400
