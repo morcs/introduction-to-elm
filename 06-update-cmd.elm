@@ -156,9 +156,14 @@ renderStat label value =
 -- HTTP
 
 
+apiUrl =
+    "https://l9axnk5c93.execute-api.us-east-1.amazonaws.com/dev"
+
+
 sendApiRequest : Cmd Msg
 sendApiRequest =
-    Http.get "https://l9axnk5c93.execute-api.us-east-1.amazonaws.com/dev" decodeResponse
+    decodeResponse
+        |> Http.get apiUrl
         |> Http.send Loaded
 
 
