@@ -37,6 +37,7 @@ init =
 type Msg
     = Select Card
     | Loaded (Result Http.Error (List Card))
+    | GetNewCards
 
 
 update msg model =
@@ -59,6 +60,9 @@ update msg model =
 
                 _ ->
                     ( Error "Unknown error", Cmd.none )
+        
+        GetNewCards ->
+            (model, sendApiRequest)
 
 
 
@@ -78,6 +82,8 @@ view model =
                     [ div
                         [ class "row" ]
                         (List.map renderCard cards)
+                    , p [] 
+                        [ button [ onClick GetNewCards ] [ text "Get new cards" ] ]
                     ]
                 ]
 
