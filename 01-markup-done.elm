@@ -33,18 +33,12 @@ type alias Card =
 
 model : Model
 model =
-    [ { imgUrl = "https://media.giphy.com/media/qoxM1gi6i0V9e/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/CEdVDTtkvSelO/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/TKfywHrPHpJiE/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/cqG5aFdTkk5ig/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/QsTKxTfou4SSk/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/BkhOTDvASCfwk/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/mjvwvf7Udt8rK/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/1UnVU7zrZr3cQ/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/I04JymgGbnlgk/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/VM1JL42ALn0UU/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/RlBtYmW0BGUHS/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
-    , { imgUrl = "https://media.giphy.com/media/bMnnmNo087fgs/giphy.gif", name = "Dave", nonchalance = 9, aggression = 4, glamour = 6, speed = 9 }
+    [ { imgUrl = "https://media.giphy.com/media/QsTKxTfou4SSk/giphy.gif", name = "The Joneses", nonchalance = 8, aggression = 6, glamour = 4, speed = 5 }
+    , { imgUrl = "https://media.giphy.com/media/mjvwvf7Udt8rK/giphy.gif", name = "Charlotte", nonchalance = 5, aggression = 9, glamour = 4, speed = 8 }
+    , { imgUrl = "https://media.giphy.com/media/qoxM1gi6i0V9e/giphy.gif", name = "David", nonchalance = 8, aggression = 4, glamour = 8, speed = 10 }
+    , { imgUrl = "https://media.giphy.com/media/CEdVDTtkvSelO/giphy.gif", name = "Mike", nonchalance = 10, aggression = 2, glamour = 9, speed = 7 }
+    , { imgUrl = "https://media.giphy.com/media/TKfywHrPHpJiE/giphy.gif", name = "Helen", nonchalance = 7, aggression = 10, glamour = 6, speed = 4 }
+    , { imgUrl = "https://media.giphy.com/media/BkhOTDvASCfwk/giphy.gif", name = "David & Bill", nonchalance = 9, aggression = 1, glamour = 7, speed = 3 }
     ]
 
 
