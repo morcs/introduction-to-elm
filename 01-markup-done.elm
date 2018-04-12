@@ -48,20 +48,11 @@ model =
 
 view : Model -> Html msg
 view model =
-    div []
-        [ renderTopBar
-        , main_ [ attribute "role" "main", class "container my-5 py-2" ]
-            [ div
-                [ class "row" ]
-                (List.map renderCard model)
-            ]
+    main_ [ attribute "role" "main", class "container my-5 py-2" ]
+        [ div
+            [ class "row" ]
+            (List.map renderCard model)
         ]
-
-
-renderTopBar : Html msg
-renderTopBar =
-    div [ class "fixed-top bg-success text-white p-3" ]
-        [ text "Please select a card" ]
 
 
 renderCard : Card -> Html msg
@@ -86,6 +77,6 @@ renderCard card =
 renderStat : String -> Int -> Html msg
 renderStat label value =
     tr []
-        [ td [] [ text label ]
-        , th [ class "text-right" ] [ text (toString value) ]
+        [ th [] [ text label ]
+        , td [ class "text-right" ] [ text (toString value) ]
         ]
