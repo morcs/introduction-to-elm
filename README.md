@@ -1,10 +1,21 @@
 # introduction-to-elm
 Code samples for my "Introduction to Elm" talk
 
-https://ellie-app.com/qfNpms8y8a1/0
+All should use the following HTML in Ellie (which just adds the Bootstrap link tag)
 
-* Function syntax - static markup
-* Union types - states
-* Update function - test states
-* Maybe type - select card
-* Result type - API call, update returning commands
+```html
+<html>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" />
+  <style>
+    /* you can style your program here */
+  </style>
+</head>
+<body>
+  <script>
+    var app = Elm.Main.fullscreen()
+    // you can use ports and stuff here
+  </script>
+</body>
+</html>
+```
