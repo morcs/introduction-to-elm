@@ -4,12 +4,17 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
-import Json.Decode
-import Json.Decode.Pipeline
+import Json.Decode as Decode
+import Json.Decode.Pipeline as DecodePipeline
 
 
 main =
-    Html.program { init = init, update = update, view = view, subscriptions = always Sub.none }
+    Html.program
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = always Sub.none
+        }
 
 
 
@@ -23,11 +28,20 @@ type Model
 
 
 type alias Card =
-    { imgUrl : String, name : String, nonchalance : Int, aggression : Int, glamour : Int, speed : Int }
+    { imgUrl : String
+    , name : String
+    , nonchalance : Int
+    , aggression : Int
+    , glamour : Int
+    , speed : Int
+    }
 
 
+init : ( Model, Cmd Msg )
 init =
-    ( Loading, sendApiRequest )
+    ( Loading
+    , sendApiRequest
+    )
 
 
 
@@ -35,40 +49,45 @@ init =
 
 
 type Msg
-    = Select Card
+    = Select (List Card) Card
     | Loaded (Result Http.Error (List Card))
     | GetNewCards
 
 
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Select card ->
-            case model of
-                CardList cards _ ->
-                    ( CardList cards (Just card), Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
+        Select cards card ->
+            ( CardList cards (Just card)
+            , Cmd.none
+            )
 
         Loaded (Result.Ok cards) ->
-            ( CardList cards Nothing, Cmd.none )
+            ( CardList cards Nothing
+            , Cmd.none
+            )
 
-        Loaded (Result.Err err) ->
-            case err of
-                BadStatus { body } ->
-                    ( Error body, Cmd.none )
+        Loaded (Result.Err (BadStatus { body })) ->
+            ( Error body
+            , Cmd.none
+            )
 
-                _ ->
-                    ( Error "Unknown error", Cmd.none )
-        
+        Loaded (Result.Err _) ->
+            ( Error "API returned an unknown error"
+            , Cmd.none
+            )
+
         GetNewCards ->
-            (model, sendApiRequest)
+            ( model
+            , sendApiRequest
+            )
 
 
 
 -- VIEW
 
 
+view : Model -> Html Msg
 view model =
     case model of
         Loading ->
@@ -81,8 +100,8 @@ view model =
                 , main_ [ attribute "role" "main", class "container my-5 py-2" ]
                     [ div
                         [ class "row" ]
-                        (List.map renderCard cards)
-                    , p [] 
+                        (List.map (renderCard cards) cards)
+                    , p []
                         [ button [ onClick GetNewCards ] [ text "Get new cards" ] ]
                     ]
                 ]
@@ -92,6 +111,7 @@ view model =
                 [ text ("Error: " ++ msg) ]
 
 
+renderTopBar : Maybe Card -> Html Msg
 renderTopBar selected =
     case selected of
         Nothing ->
@@ -105,9 +125,10 @@ renderTopBar selected =
                 ]
 
 
-renderCard card =
-    div [ class "col-sm-6" ]
-        [ div [ class "card my-2 clickable", onClick (Select card) ]
+renderCard : List Card -> Card -> Html Msg
+renderCard cards card =
+    div [ class "col-sm-6 col-md-4" ]
+        [ div [ class "card my-2 clickable", onClick (Select cards card) ]
             [ div [ class "card-header" ]
                 [ text card.name ]
             , div [ class "my-0 font-weight-normal" ]
@@ -123,6 +144,7 @@ renderCard card =
         ]
 
 
+renderStat : String -> Int -> Html Msg
 renderStat label value =
     tr []
         [ td [] [ text label ]
@@ -134,21 +156,28 @@ renderStat label value =
 -- HTTP
 
 
+apiUrl =
+    "https://l9axnk5c93.execute-api.us-east-1.amazonaws.com/dev"
+
+
+sendApiRequest : Cmd Msg
 sendApiRequest =
-    Http.get "https://l9axnk5c93.execute-api.us-east-1.amazonaws.com/dev" decodeResponse
+    decodeResponse
+        |> Http.get apiUrl
         |> Http.send Loaded
 
 
+decodeResponse : Decode.Decoder (List Card)
 decodeResponse =
-    Json.Decode.list decodeCard
+    Decode.list decodeCard
 
 
-decodeCard : Json.Decode.Decoder Card
+decodeCard : Decode.Decoder Card
 decodeCard =
-    Json.Decode.Pipeline.decode Card
-        |> Json.Decode.Pipeline.required "imgUrl" Json.Decode.string
-        |> Json.Decode.Pipeline.required "name" Json.Decode.string
-        |> Json.Decode.Pipeline.required "nonchalance" Json.Decode.int
-        |> Json.Decode.Pipeline.required "aggression" Json.Decode.int
-        |> Json.Decode.Pipeline.required "glamour" Json.Decode.int
-        |> Json.Decode.Pipeline.required "speed" Json.Decode.int
+    DecodePipeline.decode Card
+        |> DecodePipeline.required "imgUrl" Decode.string
+        |> DecodePipeline.required "name" Decode.string
+        |> DecodePipeline.required "nonchalance" Decode.int
+        |> DecodePipeline.required "aggression" Decode.int
+        |> DecodePipeline.required "glamour" Decode.int
+        |> DecodePipeline.required "speed" Decode.int
